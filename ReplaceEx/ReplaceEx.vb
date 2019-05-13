@@ -132,6 +132,7 @@ Public Class ReplaceEx
             For Each filePath In fileList
                 Dim wfileInfo As FileInfo = New FileInfo(filePath)
                 Dim wLines As String() = Nothing
+                Dim wReplaceCnt As Integer = 0
 
                 If Not wfileInfo.Exists() Then
                     If MsgBox("File: [" & filePath & "] is not existed, continue process?", MsgBoxStyle.OkCancel) <> MsgBoxResult.Ok Then
@@ -145,11 +146,14 @@ Public Class ReplaceEx
                     For Each wSD In srcDstList
                         If wLines(i).Contains(wSD.Src) Then
                             wLines(i) = wLines(i).Replace(wSD.Src, wSD.Dst)
+                            wReplaceCnt += 1
                         End If
                     Next
                 Next
 
-                File.WriteAllLines(filePath, wLines)
+                If wReplaceCnt <> 0 Then
+                    File.WriteAllLines(filePath, wLines)
+                End If
             Next
 
         Catch ex As Exception
